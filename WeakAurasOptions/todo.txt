@@ -1,0 +1,2 @@
+MoverSizer.lua line 100, rotate the highlight texture
+AceGUIWidget-MultiLineEditBox line 138 (as well as custom WeakAurasMultiLineEditBox), dirty fix OnTextChanged fires for different MultilineBoxes and same lasttext reference is set

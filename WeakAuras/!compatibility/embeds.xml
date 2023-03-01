@@ -1,0 +1,7 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+	<Script file="compatibility.lua"/>
+	<Script file="Constants.lua"/>
+	<Include file="Fonts.xml"/>
+	<Script file="OptionsFrameTemplates.lua"/>
+	<Include file="OptionsFrameTemplates.xml"/>
+</Ui>
