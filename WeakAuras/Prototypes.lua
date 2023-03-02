@@ -5702,12 +5702,13 @@ Private.event_prototypes = {
         type = "tristate",
         init = "IsResting()"
       },
+      --[[
       {
         name = "mounted",
         display = L["Mounted"],
         type = "tristate",
         init = "IsMounted()"
-      },
+      },]]
       {
         name = "HasPet",
         display = L["HasPet"],
