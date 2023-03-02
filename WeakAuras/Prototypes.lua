@@ -5715,12 +5715,6 @@ Private.event_prototypes = {
         init = "not UnitIsDeadOrGhost('player')"
       },
       {
-        name = "vehicle",
-        display = L["In Vehicle"],
-        type = "tristate",
-        init = "UnitInVehicle('player')",
-      },
-      {
         name = "resting",
         display = L["Resting"],
         type = "tristate",
