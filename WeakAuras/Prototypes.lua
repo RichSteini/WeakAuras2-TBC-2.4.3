@@ -1526,7 +1526,7 @@ Private.event_prototypes = {
       },
       {
         name = "deficit",
-        display = WeakAuras.newFeatureString .. L["Health Deficit"],
+        display = L["Health Deficit"],
         type = "number",
         init = "total - value",
         store = true,
