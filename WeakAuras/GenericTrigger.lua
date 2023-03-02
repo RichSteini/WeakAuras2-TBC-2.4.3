@@ -1509,7 +1509,7 @@ do
 
   function WeakAuras.GetSwingTimerInfo(hand)
     if(hand == "main") then
-      local itemId = GetInventoryItemID("player", mh);
+      local itemId = GetInventoryItemLink("player", mh);
       local name, _, _, _, _, _, _, _, _, icon = GetItemInfo(itemId or 0);
       if(lastSwingMain) then
         return swingDurationMain, lastSwingMain + swingDurationMain - mainSwingOffset, name, icon;
@@ -1517,7 +1517,7 @@ do
         return 0, math.huge, name, icon;
       end
     elseif(hand == "off") then
-      local itemId = GetInventoryItemID("player", oh);
+      local itemId = GetInventoryItemLink("player", oh);
       local name, _, _, _, _, _, _, _, _, icon = GetItemInfo(itemId or 0);
       if(lastSwingOff) then
         return swingDurationOff, lastSwingOff + swingDurationOff, name, icon;
@@ -1525,7 +1525,7 @@ do
         return 0, math.huge, name, icon;
       end
     elseif(hand == "ranged") then
-      local itemId = GetInventoryItemID("player", ranged);
+      local itemId = GetInventoryItemLink("player", ranged);
       local name, _, _, _, _, _, _, _, _, icon = GetItemInfo(itemId or 0);
       if (lastSwingRange) then
         return swingDurationRange, lastSwingRange + swingDurationRange, name, icon;
