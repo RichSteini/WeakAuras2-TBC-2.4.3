@@ -790,24 +790,6 @@ Private.load_prototype = {
       init = "false",
     },
     {
-      name = "vehicle",
-      display = L["In Vehicle"],
-      type = "tristate",
-      init = "arg",
-      width = WeakAuras.normalWidth,
-      optional = true,
-      events = {"VEHICLE_UPDATE", "UNIT_ENTERED_VEHICLE", "UNIT_EXITED_VEHICLE", "UNIT_FLAGS"}
-    },
-    {
-      name = "vehicleUi",
-      display = L["Has Vehicle UI"],
-      type = "tristate",
-      init = "arg",
-      width = WeakAuras.normalWidth,
-      optional = true,
-      events = {"VEHICLE_UPDATE", "UNIT_ENTERED_VEHICLE", "UNIT_EXITED_VEHICLE"}
-    },
-    {
       name = "ingroup",
       display = L["Group Type"],
       type = "multiselect",
