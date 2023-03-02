@@ -1093,12 +1093,12 @@ Private.event_prototypes = {
     type = "unit",
     events = {
       ["events"] = {
-        "UNIT_COMBO_POINTS",
+        "PLAYER_COMBO_POINTS",
         "PLAYER_TARGET_CHANGED",
         "PLAYER_FOCUS_CHANGED"
        }
     },
-    force_events = "UNIT_COMBO_POINTS",
+    force_events = "PLAYER_COMBO_POINTS",
     name = L["Combo Points"],
     args = {
       {
