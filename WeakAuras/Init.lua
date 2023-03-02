@@ -1,5 +1,4 @@
 --local AddonName, Private = ...
-print("INIT")
 Private = {}
 WeakAuras = {}
 WeakAuras.L = {}

@@ -5542,21 +5542,6 @@ Private.event_prototypes = {
         conditionType = "number"
       },
       {
-        name = "moveSpeed",
-        display = L["Continuously update Movement Speed"],
-        type = "boolean",
-        test = true,
-        width = WeakAuras.doubleWidth
-      },
-      {
-        name = "movespeedpercent",
-        display = L["Movement Speed (%)"],
-        type = "number",
-        init = "GetUnitSpeed('player') / 7 * 100",
-        store = true,
-        conditionType = "number"
-      },
-      {
         name = "dodgerating",
         display = L["Dodge Rating"],
         type = "number",
