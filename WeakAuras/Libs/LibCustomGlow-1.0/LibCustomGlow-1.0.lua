@@ -567,52 +567,145 @@ end
 local ButtonGlowPool = CreateFramePool("Frame", GlowParent, "", ButtonGlowResetter)
 lib.ButtonGlowPool = ButtonGlowPool
 
-local function AnimIn_OnPlay(anim)
-	local frame = anim:GetRegionParent()
-	local frameWidth, frameHeight = frame:GetSize()
-	frame.spark:SetSize(frameWidth, frameHeight)
-	frame.spark:SetAlpha(not (frame.color) and 1 or 0.3 * frame.color[4])
-	frame.innerGlow:SetSize(frameWidth / 2, frameHeight / 2)
-	frame.innerGlow:SetAlpha(not (frame.color) and 1 or frame.color[4])
-	frame.innerGlowOver:SetAlpha(not (frame.color) and 1 or frame.color[4])
-	frame.outerGlow:SetSize(frameWidth * 2, frameHeight * 2)
-	frame.outerGlow:SetAlpha(not (frame.color) and 1 or frame.color[4])
-	frame.outerGlowOver:SetAlpha(not (frame.color) and 1 or frame.color[4])
-	frame.ants:SetSize(frameWidth * 0.85, frameHeight * 0.85)
-	frame.ants:SetAlpha(0)
-	frame:Show()
+local function AnimIn_OnPlay(f)
+	f.animIn.elapsed = 0
+	local frameWidth, frameHeight = f:GetSize()
+	f.spark:SetSize(frameWidth, frameHeight)
+	f.spark.currentAlpha = not (f.color) and 1 or 0.3 * f.color[4]
+	f.spark:SetAlpha(f.spark.currentAlpha)
+	f.innerGlow.currentScale = 0.5
+	f.innerGlow:SetSize(frameWidth * f.innerGlow.currentScale, frameHeight * f.innerGlow.currentScale)
+	f.innerGlow.currentAlpha = not f.color and 1 or f.color[4]
+	f.innerGlow:SetAlpha(f.innerGlow.currentAlpha)
+	f.innerGlowOver.currentAlpha = not f.color and 1 or f.color[4]
+	f.innerGlowOver:SetAlpha(f.innerGlowOver.currentAlpha)
+	f.outerGlow.currentScale = 2
+	f.outerGlow:SetSize(frameWidth * f.outerGlow.currentScale, frameHeight * f.outerGlow.currentScale)
+	f.outerGlow.currentAlpha = not f.color and 1 or f.color[4]
+	f.outerGlow:SetAlpha(f.outerGlow.currentAlpha)
+	f.outerGlowOver.currentAlpha = not f.color and 1 or f.color[4]
+	f.outerGlowOver:SetAlpha(f.outerGlowOver.currentAlpha)
+	f.ants:SetSize(frameWidth * 0.85, frameHeight * 0.85)
+	f.ants.currentAlpha = 0
+	f.ants:SetAlpha(f.ants.currentAlpha)
+	f:Show()
 end
 
-local function AnimIn_OnFinished(group)
-	local frame = group:GetParent()
-	local frameWidth, frameHeight = frame:GetSize()
-	frame.spark:SetAlpha(0)
-	frame.innerGlow:SetAlpha(0)
-	frame.innerGlow:SetSize(frameWidth, frameHeight)
-	frame.innerGlowOver:SetAlpha(0)
-	frame.outerGlow:SetSize(frameWidth, frameHeight)
-	frame.outerGlowOver:SetAlpha(0)
-	frame.outerGlowOver:SetSize(frameWidth, frameHeight)
-	frame.ants:SetAlpha(not (frame.color) and 1 or frame.color[4])
+local function AnimIn_OnFinished(f)
+	f.animIn.IsPlaying = false
+	f.animIn.elapsed = 0
+	local frameWidth, frameHeight = f:GetSize()
+	f.spark:SetAlpha(0)
+	f.innerGlow:SetAlpha(0)
+	f.innerGlow:SetSize(frameWidth, frameHeight)
+	f.innerGlowOver:SetAlpha(0)
+	f.outerGlow:SetSize(frameWidth, frameHeight)
+	f.outerGlowOver:SetAlpha(0)
+	f.outerGlowOver:SetSize(frameWidth, frameHeight)
+	f.ants:SetAlpha(not (f.color) and 1 or f.color[4])
 end
 
-local function AnimIn_OnStop(group)
-	local frame = group:GetParent()
-	frame.spark:SetAlpha(0)
-	frame.innerGlow:SetAlpha(0)
-	frame.innerGlowOver:SetAlpha(0)
-	frame.outerGlowOver:SetAlpha(0)
+local function AnimIn_OnStop(f)
+	f.animIn.IsPlaying = false
+	f.animIn.elapsed = 0
+	f.spark:SetAlpha(0)
+	f.innerGlow:SetAlpha(0)
+	f.innerGlowOver:SetAlpha(0)
+	f.outerGlowOver:SetAlpha(0)
 end
 
 local function bgHide(self)
-	if self.animOut:IsPlaying() then
+	if self.animOut.IsPlaying then
 		self.animOut:Stop()
-		ButtonGlowPool:Release(self)
+		lib.ButtonGlowPool:Release(self)
 	end
 end
 
-local function bgUpdate(self, elapsed)
-	AnimateTexCoords(self.ants, 256, 256, 48, 48, 22, elapsed, self.throttle)
+local function bgUpdate(f, elapsed)
+	if f.animIn.IsPlaying then
+		f.animIn.elapsed = f.animIn.elapsed + elapsed
+		
+		local curDur = f.animIn.elapsed
+		local activeAnim = 0
+		
+		for i=1,#f.animIn.config do
+			local a = f.animIn.config[i]
+			
+			local delay = a.startDelay or 0
+			
+			if curDur >= delay then
+				local start = curDur - delay
+				local finish = delay + a.duration
+				local progress = (curDur >= finish and 1) or 1/finish*start
+				
+				if a.scaleX and a.scaleY then
+					local tex = f[a.name]
+					local curScale = f[a.name].currentScale or 1
+					local baseSizeX, baseSizeY = f:GetSize()
+					tex:ClearAllPoints()
+					tex:SetPoint("CENTER")
+					tex:SetSize(baseSizeX*(curScale - (curScale - a.scaleX)*progress), baseSizeY*(curScale - (curScale - a.scaleY)*progress))
+				end
+				
+				if a.alpha then
+					f[a.name]:SetAlpha(f[a.name].currentAlpha - (a.alpha*progress))
+				end
+				
+				if progress < 1 then
+					activeAnim = activeAnim + 1
+				end
+				
+			end
+			
+		end
+		
+		if activeAnim == 0 then
+			f.animIn.OnFinished()
+		end
+		
+	elseif f.animOut.IsPlaying then
+		f.animOut.elapsed = f.animOut.elapsed + elapsed
+		
+		local curDur = f.animOut.elapsed
+		local activeAnim = 0
+		
+		for i=1,#f.animOut.config do
+			local a = f.animOut.config[i]
+			
+			local delay = a.startDelay or 0
+			
+			if curDur >= delay then
+				local start = curDur - delay
+				local finish = delay + a.duration
+				local progress = (curDur >= finish and 1) or 1/finish*start
+				
+				if a.scaleX and a.scaleY then
+					local tex = f[a.name]
+					f[a.name].currentScale = (progress==1 and a.scaleX) or 1
+					local curScale = f[a.name].currentScale
+					local baseSize = f:GetSize()
+					tex:ClearAllPoints()
+					tex:SetPoint("CENTER")
+					tex:SetSize(baseSize*(curScale+a.scaleX*progress), baseSize*(curScale+a.scaleY*progress))
+				end
+				
+				if a.alpha then
+					f[a.name]:SetAlpha(f[a.name].currentAlpha - (a.alpha*progress))
+				end
+				
+				if progress < 1 then
+					activeAnim = activeAnim + 1
+				end
+				
+			end
+			
+		end
+		
+		if activeAnim == 0 then
+			f.animOut.OnFinished()
+		end
+	end
+	AnimateTexCoords(f.ants, 256, 256, 48, 48, 22, elapsed, f.throttle)
 end
 
 local function IsAnimPlaying(self)
@@ -663,37 +756,138 @@ local function configureButtonGlow(f, alpha)
 	f.ants:SetAlpha(0)
 	f.ants:SetTexture([[Interface\AddOns\WeakAuras\Libs\LibCustomGlow-1.0\IconAlertAnts]])
 
-	f.animIn = f:CreateAnimationGroup()
+
+	f.animIn = {
+		elapsed = 0,
+		config = {
+			[1] = {
+				name = "spark",
+				scaleX = 1.5,
+				scaleY = 1.5,
+				alpha = 1,
+				duration = 0.2
+			},
+			[2]  = {
+				name = "innerGlow",
+				scaleX = 1,
+				scaleY = 1,
+				duration = 0.3
+			},
+			[3] = {
+				name = "innerGlowOver",
+				scaleX = 1,
+				scaleY = 1,
+				alpha = -1,
+				duration = 0.3
+			},
+			[4]  = {
+				name = "outerGlow",
+				scaleX = 1,
+				scaleY = 1,
+				duration = 0.3
+			},
+			[5] = {
+				name = "outerGlowOver",
+				scaleX = 1,
+				scaleY = 1,
+				alpha = -1,
+				duration = 0.3
+			},
+			[6] = {
+				name = "spark",
+				startdelay = 0.2,
+				scaleX = 1,
+				scaleY = 1,
+				alpha = -1,
+				duration = 0.2
+			},
+			[7] = {
+				name = "innerGlow",
+				startdelay = 0.3,
+				alpha = -1,
+				duration = 0.2
+			},
+			[8] = {
+				name = "ants",
+				startdelay = 0.3,
+				alpha = 1,
+				duration = 0.2
+			},
+		},
+		OnPlay = function()
+			AnimIn_OnPlay(f)
+		end,
+		OnFinished = function()
+			AnimIn_OnFinished(f)
+		end,
+		OnStop = function()
+			AnimIn_OnStop(f)
+		end
+	}
+
 	f.animIn.appear = {}
 	f.animIn.fade = {}
-	CreateScaleAnim(f.animIn, "spark",			1, 0.2, 1.5, 1.5, nil, nil, AnimIn_OnPlay)
-	CreateAlphaAnim(f.animIn, "spark",			1, 0.2, alpha, nil, nil, nil, true)
-	CreateScaleAnim(f.animIn, "innerGlow",		1, 0.3, 2, 2)
-	CreateScaleAnim(f.animIn, "innerGlowOver",	1, 0.3, 2, 2)
-	CreateAlphaAnim(f.animIn, "innerGlowOver",	1, 0.3, alpha, nil, nil, nil, false)
-	CreateScaleAnim(f.animIn, "outerGlow",		1, 0.3, 0.5, 0.5)
-	CreateScaleAnim(f.animIn, "outerGlowOver",	1, 0.3, 0.5, 0.5)
-	CreateAlphaAnim(f.animIn, "outerGlowOver",	1, 0.3, alpha, nil, nil, nil, false)
-	CreateScaleAnim(f.animIn, "spark",			1, 0.2, 0.666666, 0.666666, 0.2)
-	CreateAlphaAnim(f.animIn, "spark",			1, 0.2, alpha, 0.2, nil, nil, false)
-	CreateAlphaAnim(f.animIn, "innerGlow",		1, 0.2, alpha, 0.3, nil, nil, false)
-	CreateAlphaAnim(f.animIn, "ants",			1, 0.2, alpha, 0.3, nil, nil, true)
-	f.animIn:SetScript("OnStop", AnimIn_OnStop)
-	f.animIn:SetScript("OnFinished", AnimIn_OnFinished)
 
-	f.animOut = f:CreateAnimationGroup()
+	function f.animIn.Play()
+		f.animIn.OnPlay()
+		f.animIn.IsPlaying = true
+	end
+	
+	function f.animIn.Stop()
+		f.animIn.IsPlaying = false
+		f.animIn.OnFinished()
+	end
+
+	f.animOut = {
+		elapsed = 0,
+		config = {
+			[1] = {
+				name = "outerGlowOver",
+				alpha = 1,
+				duration = 0.2
+			},
+			[2] = {
+				name = "ants",
+				alpha = -1,
+				duration = 0.2
+			},
+			[3] = {
+				name = "outerGlowOver",
+				startdelay = 0.2,
+				alpha = -1,
+				duration = 0.2
+			},
+			[4] = {
+				name = "outerGlow",
+				startdelay = 0.2,
+				alpha = -1,
+				duration = 0.2
+			},
+		},
+		OnFinished = function()
+			f.animOut.IsPlaying = false
+			ButtonGlowPool:Release(f)
+		end,
+		OnPlay = function()
+			f.animOut.IsPlaying = true
+		end,
+		OnStop = function()
+			f.animOut.IsPlaying = false
+		end
+	}
 	f.animOut.appear = {}
 	f.animOut.fade = {}
-	CreateAlphaAnim(f.animOut, "outerGlowOver",	1, 0.2, alpha, nil, nil, nil, true)
-	CreateAlphaAnim(f.animOut, "ants",			1, 0.2, alpha, nil, nil, nil, false)
-	CreateAlphaAnim(f.animOut, "outerGlowOver",	2, 0.2, alpha, nil, nil, nil, false)
-	CreateAlphaAnim(f.animOut, "outerGlow",		2, 0.2, alpha, nil, nil, nil, false)
-	f.animOut:SetScript("OnPlay", function(self) self.isPlaying = true; end)
-	f.animOut:SetScript("OnStop", function(self) self.isPlaying = false; end)
-	f.animOut:SetScript("OnFinished", function(self) self.isPlaying = false; ButtonGlowPool:Release(f) end)
-
-	f.animOut.isPlaying = false
-	f.animOut.IsPlaying = IsAnimPlaying
+	--f.animOut.isPlaying = false
+	--f.animOut.IsPlaying = IsAnimPlaying
+	
+	function f.animOut.Play()
+		f.animOut.IsPlaying = true
+	end
+	
+	function f.animOut.Stop()
+		f.animOut.IsPlaying = false
+		f.animOut.OnFinished()
+	end
 
 	f:SetScript("OnHide", bgHide)
 end
@@ -729,8 +923,8 @@ function lib.ButtonGlow_Start(r, color, frequency, frameLevel)
 		f:SetPoint("TOPLEFT", r, "TOPLEFT", -width * 0.2, height * 0.2)
 		f:SetPoint("BOTTOMRIGHT", r, "BOTTOMRIGHT", width * 0.2, -height * 0.2)
 		f.ants:SetSize(width * 1.4 * 0.85, height * 1.4 * 0.85)
-		AnimIn_OnFinished(f.animIn)
-		if f.animOut:IsPlaying() then
+		AnimIn_OnFinished(f)
+		if f.animOut.IsPlaying then
 			f.animOut:Stop()
 			f.animIn:Play()
 		end
@@ -785,7 +979,7 @@ end
 
 function lib.ButtonGlow_Stop(r)
 	if r._ButtonGlow then
-		if r._ButtonGlow.animIn:IsPlaying() then
+		if r._ButtonGlow.animIn.IsPlaying then
 			r._ButtonGlow.animIn:Stop()
 			ButtonGlowPool:Release(r._ButtonGlow)
 		elseif r:IsVisible() then
