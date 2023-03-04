@@ -90,6 +90,29 @@ do
 	SLASH_PRINT1 = "/print"
 end
 
+-- The main issue with UnitAura explained:
+-- It does not exist in TBC and therefore we have to write it ourselves.
+-- Bufftrigger2 expects a spellId from the function, but we don't really know which one is correct.
+-- There is no function that yields the spellId for a spellname.
+-- The way it is implemented now is that always the highest spellId for a spellname is returned.
+-- Also note that UnitBuff does not return isStealable, unlucky
+local spellIdCache = {}
+local spellIdCacheId = 0
+local spellIdCacheMisses = 0
+while spellIdCacheMisses < 53000 do
+	spellIdCacheId = spellIdCacheId + 1
+	local name, _, icon = GetSpellInfo(spellIdCacheId)
+
+	if(icon == 136243) then -- 136243 is the a gear icon, we can ignore those spells
+		spellIdCacheMisses = 0;
+	elseif name and name ~= "" then
+		spellIdCache[name] = spellIdCacheId
+		spellIdCacheMisses = 0
+	else
+		spellIdCacheMisses = spellIdCacheMisses + 1
+	end
+end
+
 function UnitAura(unit, indexOrName, rank, filter)
 	--[[
 	local aura_index, aura_name, aura_type
@@ -117,58 +140,56 @@ function UnitAura(unit, indexOrName, rank, filter)
 	end
 	--]]
 	
-  if ((filter and filter:find("HARMFUL")) or ((rank and rank:find("HARMFUL")) and filter == nil)) then
-    debuffType = "HARMFUL";
-		elseif ((filter and filter:find("HELPFUL")) or ((rank and rank:find("HARMFUL")) and filter == nil)) then
-    debuffType = "HELPFUL";
-		else
-    debuffType = nil;
+	if ((filter and filter:find("HARMFUL")) or ((rank and rank:find("HARMFUL")) and filter == nil)) then
+		debuffType = "HARMFUL";
+	elseif ((filter and filter:find("HELPFUL")) or ((rank and rank:find("HARMFUL")) and filter == nil)) then
+		debuffType = "HELPFUL";
+	else
+		debuffType = nil;
 	end
   
-  local x;
+	local x;
 	if(type(indexOrName) == "number") then
 		x = indexOrName
 	else
 		x = 1
 	end
 	
-  if (debuffType == "HELPFUL" or debuffType == nil) then
+	if (debuffType == "HELPFUL" or debuffType == nil) then
 		local castable = filter and filter:find("PLAYER") and 1 or nil;
-    local name, r, icon, count, duration, remaining = UnitBuff(unit, x, castable);
-    while (name ~= nil) do
-      if ((name == indexOrName or x == indexOrName) and (rank == nil or rank:find("HARMFUL") or rank:find("HELPFUL") or rank == r)) then
+		local name, r, icon, count, duration, remaining = UnitBuff(unit, x, castable);
+		while (name ~= nil) do
+			if ((name == indexOrName or x == indexOrName) and (rank == nil or rank:find("HARMFUL") or rank:find("HELPFUL") or rank == r)) then
 				-- Due to a Blizzard bug, having two of the same weapon
 				-- proc will return nil for the duration of the second proc.
 				-- Crusader (Holy Strength), Mongoose (Lightning Speed),
 				-- and Executioner all last 15 seconds.
 				duration = duration or 15
 				remaining = remaining or GetPlayerBuffTimeLeft(x)
-
-        return name, r, icon, count, debuffType, duration, GetTime() + (remaining or 0), (castable and "player")
+				return name, r, icon, count, debuffType, duration, GetTime() + (remaining or 0), (castable and "player"), nil, nil, spellIdCache[name]
 			end
-      x = x + 1;
-      name, r, icon, count, duration, remaining = UnitBuff(unit, x, castable);
+			x = x + 1;
+			name, r, icon, count, duration, remaining = UnitBuff(unit, x, castable);
 		end
 	end
 	
-  if (debuffType == "HARMFUL" or debuffType == nil) then
+	if (debuffType == "HARMFUL" or debuffType == nil) then
 		local removable = nil
 		if(type(indexOrName) == "number") then
 			x = indexOrName
 		else
 			x = 1
 		end
-    local name, r, icon, count, dispelType, duration, expirationTime = UnitDebuff(unit, x, removable);
-    while (name ~= nil) do
-      if ((name == indexOrName or x == indexOrName) and (rank == nil or rank:find("HARMFUL") or rank:find("HELPFUL") or rank == r)) then
-        return name, r, icon, count, debuffType, duration, GetTime() + (expirationTime or 0)
+		local name, r, icon, count, dispelType, duration, expirationTime = UnitDebuff(unit, x, removable);
+		while (name ~= nil) do
+			if ((name == indexOrName or x == indexOrName) and (rank == nil or rank:find("HARMFUL") or rank:find("HELPFUL") or rank == r)) then
+				return name, r, icon, count, debuffType, duration, GetTime() + (expirationTime or 0), nil, nil, spellIdCache[name]
 			end
-      x = x + 1;
-      name, r, icon, count, dispelType, duration, expirationTime = UnitDebuff(unit, x, removable);
+			x = x + 1;
+			name, r, icon, count, dispelType, duration, expirationTime = UnitDebuff(unit, x, removable);
 		end
 	end
-	
-  return nil;
+	return nil;
 end
 
 function UnitInVehicle(unit)
