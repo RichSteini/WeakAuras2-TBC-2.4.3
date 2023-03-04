@@ -64,6 +64,7 @@ local function ConstructIconPicker(frame)
     local num = 0;
     if(subname and subname ~= "") then
       for name, icons in pairs(spellCache.Get()) do
+        --[[
         if(name:lower():find(subname, 1, true)) then
           if icons.spells then
             for spellId, icon in pairs(icons.spells) do
@@ -87,8 +88,22 @@ local function ConstructIconPicker(frame)
             end
           end
         end
+        ]]
+        if icons.spells then
+          for spellId, icon in pairs(icons.spells) do
+            if(name:lower():find(subname) or icon:lower():find(subname)) then
+              if (not usedIcons[icon]) then
+                AddButton(name, icon)
+                num = num + 1;
+                if(num >= 60) then
+                  break;
+                end
+              end
+            end
+          end
+        end
 
-        if(num >= 500) then
+        if(num >= 60) then
           break;
         end
       end
