@@ -5907,8 +5907,13 @@ end
 if false then
   Private.event_prototypes["DBM Stage"] = nil
 end
+-- Disable other addon support for now
 Private.event_prototypes["BigWigs Message"] = nil
 Private.event_prototypes["BigWigs Timer"] = nil
+Private.event_prototypes["DBM Announce"] = nil
+Private.event_prototypes["DBM Timer"] = nil
+Private.event_prototypes["DBM Stage"] = nil
+Private.event_prototypes["GTFO"] = nil
 
 Private.category_event_prototype = {}
 for name, prototype in pairs(Private.event_prototypes) do
