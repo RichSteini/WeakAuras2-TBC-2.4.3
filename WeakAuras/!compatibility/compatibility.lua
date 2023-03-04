@@ -183,7 +183,7 @@ function UnitAura(unit, indexOrName, rank, filter)
 		local name, r, icon, count, dispelType, duration, expirationTime = UnitDebuff(unit, x, removable);
 		while (name ~= nil) do
 			if ((name == indexOrName or x == indexOrName) and (rank == nil or rank:find("HARMFUL") or rank:find("HELPFUL") or rank == r)) then
-				return name, r, icon, count, debuffType, duration, GetTime() + (expirationTime or 0), nil, nil, spellIdCache[name]
+				return name, r, icon, count, dispelType, duration, GetTime() + (expirationTime or 0), nil, nil, spellIdCache[name]
 			end
 			x = x + 1;
 			name, r, icon, count, dispelType, duration, expirationTime = UnitDebuff(unit, x, removable);
