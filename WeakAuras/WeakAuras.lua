@@ -3175,7 +3175,11 @@ end
 function WeakAuras.GetAuraTooltipInfo(unit, index, filter)
   local tooltip = WeakAuras.GetHiddenTooltip();
   tooltip:ClearLines();
-  tooltip:SetUnitAura(unit, index, filter);
+  if (filter and filter:find("HARMFUL")) then
+    tooltip:SetUnitDebuff(unit, index, filter);
+  else --if (filter and filter:find("HELPFUL")) then
+    tooltip:SetUnitBuff(unit, index, filter);
+  end
   local tooltipTextLine = select(3, tooltip:GetRegions())
 
   local tooltipText = tooltipTextLine and tooltipTextLine:GetObjectType() == "FontString" and tooltipTextLine:GetText() or "";
