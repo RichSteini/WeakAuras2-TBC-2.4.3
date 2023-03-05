@@ -3293,7 +3293,11 @@ do
   local function GetActionSpellID(slot)
     local actionType, id, _, spellId = GetActionInfo(slot)
     if actionType == "spell" then
-      return spellId
+      local name, rank = GetSpellInfo(id, actionType)
+      local spellLink = GetSpellLink(name, rank or "")
+      if spellLink then
+        return tonumber(spellLink:match("spell:(%d+)"))
+      end
     elseif actionType == "macro" then
       local name, rank = GetMacroSpell(id)
       if name then
