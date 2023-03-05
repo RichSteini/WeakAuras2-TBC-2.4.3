@@ -3723,7 +3723,7 @@ Private.event_prototypes = {
     force_events = "GCD_UPDATE",
     name = L["Global Cooldown"],
     loadFunc = function(trigger)
-      WeakAuras.WatchGCD();
+      WeakAuras.WatchGCD(trigger.spellName);
     end,
     init = function(trigger)
       local ret = [[
@@ -3734,6 +3734,13 @@ Private.event_prototypes = {
       return ret:format(trigger.use_inverse and "true" or "false");
     end,
     args = {
+      {
+        name = "spellName",
+        required = true,
+        display = L["Reference Spell"],
+        type = "spell",
+        test = "true"
+      },
       {
         name = "inverse",
         display = L["Inverse"],

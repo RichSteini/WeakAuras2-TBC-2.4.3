@@ -1731,6 +1731,7 @@ do
   local runeCdExps = {};
   local runeCdHandles = {};
 
+  local spellbookLoaded;
   local gcdReference;
   local gcdStart;
   local gcdDuration;
@@ -2312,12 +2313,12 @@ do
     cdReadyFrame:RegisterEvent("UNIT_SPELLCAST_SENT");
 
     if not spellbookLoaded then
+      spellbookLoaded = true
       cdReadyFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
       cdReadyFrame:HookScript("OnEvent", function(self, event)
         if event=="PLAYER_ENTERING_WORLD" then
           WeakAuras.WatchGCD(id)
           cdReadyFrame:UnregisterEvent("PLAYER_ENTERING_WORLD")
-          spellbookLoaded = true
         end
       end)
     else
