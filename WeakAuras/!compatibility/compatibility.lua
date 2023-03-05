@@ -96,6 +96,7 @@ end
 -- There is no function that yields the spellId for a spellname.
 -- The way it is implemented now is that always the highest spellId for a spellname is returned.
 -- Also note that UnitBuff does not return isStealable, unlucky
+--[[
 local spellIdCache = {}
 local spellIdCacheId = 0
 local spellIdCacheMisses = 0
@@ -112,7 +113,9 @@ while spellIdCacheMisses < 53000 do
 		spellIdCacheMisses = spellIdCacheMisses + 1
 	end
 end
+]]
 
+-- UnitAura now parses the spellId from the spellLink, spellIdCache not used atm
 function UnitAura(unit, indexOrName, rank, filter)
 	--[[
 	local aura_index, aura_name, aura_type
@@ -166,7 +169,12 @@ function UnitAura(unit, indexOrName, rank, filter)
 				-- and Executioner all last 15 seconds.
 				duration = duration or 15
 				remaining = remaining or GetPlayerBuffTimeLeft(x)
-				return name, r, icon, count, debuffType, duration, GetTime() + (remaining or 0), (castable and "player"), nil, nil, spellIdCache[name]
+				local spellLink = GetSpellLink(name, r or "")
+				if spellLink then
+					return name, r, icon, count, debuffType, duration, GetTime() + (remaining or 0), (castable and "player"), nil, nil, tonumber(spellLink:match("spell:(%d+)"))
+				else
+					return name, r, icon, count, debuffType, duration, GetTime() + (remaining or 0), (castable and "player")
+				end
 			end
 			x = x + 1;
 			name, r, icon, count, duration, remaining = UnitBuff(unit, x, castable);
@@ -183,7 +191,12 @@ function UnitAura(unit, indexOrName, rank, filter)
 		local name, r, icon, count, dispelType, duration, expirationTime = UnitDebuff(unit, x, removable);
 		while (name ~= nil) do
 			if ((name == indexOrName or x == indexOrName) and (rank == nil or rank:find("HARMFUL") or rank:find("HELPFUL") or rank == r)) then
-				return name, r, icon, count, dispelType, duration, GetTime() + (expirationTime or 0), nil, nil, spellIdCache[name]
+				local spellLink = GetSpellLink(name, r or "")
+				if spellLink then
+					return name, r, icon, count, dispelType, duration, GetTime() + (expirationTime or 0), nil, nil, tonumber(spellLink:match("spell:(%d+)"))
+				else
+					return name, r, icon, count, dispelType, duration, GetTime() + (expirationTime or 0)
+				end
 			end
 			x = x + 1;
 			name, r, icon, count, dispelType, duration, expirationTime = UnitDebuff(unit, x, removable);
