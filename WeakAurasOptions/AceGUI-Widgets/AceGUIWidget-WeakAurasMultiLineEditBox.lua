@@ -124,24 +124,14 @@ local function OnSizeChanged(self, width, height)                               
   self.obj.editBox:SetWidth(width)
 end
 
---[[
-local function OnTextChanged(self, userInput)                                    -- EditBox
-  if userInput then
-    self = self.obj
-    self:Fire("OnTextChanged", IndentationLib.decode(self.editBox:GetText()))
-    self.button:Enable()
-end
-end
-]]
-
 local function OnTextChanged(frame)                                    -- EditBox
   local self = frame.obj
   local value = self:GetText()
   if self.lasttext and tostring(value) ~= tostring(self.lasttext) then
     self:Fire("OnTextChanged", IndentationLib.decode(value))
     self.button:Enable()
+    self.lasttext = IndentationLib.decode(value)
   end
-  self.lasttext = value
 end
 
 local function OnTextSet(self)                                                   -- EditBox
@@ -250,6 +240,7 @@ local methods = {
   end,
 
   ["SetText"] = function(self, text)
+    self.lasttext = IndentationLib.encode(text) or ""
     self.editBox:SetText(IndentationLib.encode(text))
   end,
 
