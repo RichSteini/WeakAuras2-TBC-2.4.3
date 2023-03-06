@@ -1540,4 +1540,6 @@ L["Zone ID(s)"] = "Zone ID(s)"
 L["Zone Name"] = "Gebietsname"
 L["Zoom"] = "Zoom"
 L["Zul'Gurub"] = "Zul'Gurub"
+L["Reference Spell"] = "Referenzzauber"
+L["GCD Reference Spell"] = "GCD Referenzzauber"
 

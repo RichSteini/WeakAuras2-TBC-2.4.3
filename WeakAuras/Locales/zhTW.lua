@@ -1072,4 +1072,6 @@ L["Zone ID(s)"] = "區域 ID"
 L["Zone Name"] = "區域名稱"
 L["Zoom"] = "縮放"
 L["Zul'Gurub"] = "祖爾格拉布"
+L["GCD Reference Spell"] = "GCD 參考法術"
+L["Reference Spell"] = "參考法術"
 

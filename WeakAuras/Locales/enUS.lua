@@ -1059,6 +1059,8 @@ L["Zone ID(s)"] = "Zone ID(s)"
 L["Zone Name"] = "Zone Name"
 L["Zoom"] = "Zoom"
 L["Zul'Gurub"] = "Zul'Gurub"
+L["GCD Reference Spell"] = "GCD Reference Spell"
+L["Reference Spell"] = "Reference Spell"
 
 
 -- Make missing translations available

@@ -1949,7 +1949,7 @@ do
       if ((gcdStart or 0) + (gcdDuration or 0) > startTime + duration) then
         startTime = gcdStart;
         duration = gcdDuration;
-        gcdCooldown = true;
+        --gcdCooldown = true;
       end
     end
 

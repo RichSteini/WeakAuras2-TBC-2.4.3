@@ -1229,4 +1229,6 @@ L["Zone ID(s)"] = "지역 ID"
 L["Zone Name"] = "지역 이름"
 L["Zoom"] = "확대"
 L["Zul'Gurub"] = "줄구룹"
+L["GCD Reference Spell"] = "GCD Reference Spell"
+L["Reference Spell"] = "Reference Spell"
 

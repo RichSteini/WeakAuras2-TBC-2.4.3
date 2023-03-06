@@ -2398,9 +2398,9 @@ Private.event_prototypes = {
         spellName = type(trigger.spellName) == "number" and GetSpellInfo(trigger.spellName) or trigger.spellName;
       end
       WeakAuras.WatchSpellCooldown(spellName, trigger.use_matchedRune);
-      if (trigger.use_showgcd) then
-        WeakAuras.WatchGCD();
-      end
+      --if (trigger.use_showgcd) then
+        WeakAuras.WatchGCD(trigger.gcdReferenceSpell);
+      --end
     end,
     init = function(trigger)
       trigger.spellName = trigger.spellName or 0;
@@ -2466,7 +2466,6 @@ Private.event_prototypes = {
         ]];
         ret = ret..ret2:format(tonumber(trigger.remaining or 0) or 0);
       end
-
       return ret;
     end,
     statesParameter = "one",
@@ -2481,6 +2480,13 @@ Private.event_prototypes = {
         type = "spell",
         test = "true",
         forceExactOption = true,
+      },
+      {
+        name = "gcdReferenceSpell",
+        required = true,
+        display = L["GCD Reference Spell"],
+        type = "spell",
+        test = "true"
       },
       {
         name = "extra Cooldown Progress (Spell)",
@@ -2512,13 +2518,14 @@ Private.event_prototypes = {
         test = "true",
         collapse = "extra Cooldown Progress (Spell)"
       },
+      --[[
       {
         name = "matchedRune",
         display = L["Ignore Rune CD"],
         type = "toggle",
         test = "true",
         collapse = "extra Cooldown Progress (Spell)"
-      },
+      },]]
       {
         name = "remaining",
         display = L["Remaining Time"],

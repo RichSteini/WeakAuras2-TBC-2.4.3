@@ -1751,4 +1751,6 @@ L["Zone Name"] = "Zone Name"
 L["Zoom"] = "Zoom"
 --[[Translation missing --]]
 L["Zul'Gurub"] = "Zul'Gurub"
+L["GCD Reference Spell"] = "GCD Feitiço referência"
+L["Reference Spell"] = "Feitiço referência"
 
