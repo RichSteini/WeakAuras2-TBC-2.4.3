@@ -375,8 +375,8 @@ function OptionsPrivate.CreateFrame()
   minimizebutton:SetWidth(30)
   minimizebutton:SetHeight(30)
   minimizebutton:SetPoint("CENTER", minimize, "CENTER", 1, -1)
-  minimizebutton:SetNormalTexture("Interface\\BUTTONS\\UI-Panel-CollapseButton-Up.blp")
-  minimizebutton:SetPushedTexture("Interface\\BUTTONS\\UI-Panel-CollapseButton-Down.blp")
+  minimizebutton:SetNormalTexture("Interface\\AddOns\\WeakAuras\\!Compatibility\\Textures\\UI-Panel-CollapseButton-Up.blp");
+  minimizebutton:SetPushedTexture("Interface\\AddOns\\WeakAuras\\!Compatibility\\Textures\\UI-Panel-CollapseButton-Down.blp");
   minimizebutton:SetHighlightTexture("Interface\\BUTTONS\\UI-Panel-MinimizeButton-Highlight.blp")
   minimizebutton:SetScript("OnClick", function()
     if frame.minimized then
@@ -387,15 +387,15 @@ function OptionsPrivate.CreateFrame()
         end
       end
       frame:SetHeight(db.frame and db.frame.height or 500)
-      minimizebutton:SetNormalTexture("Interface\\BUTTONS\\UI-Panel-CollapseButton-Up.blp")
-      minimizebutton:SetPushedTexture("Interface\\BUTTONS\\UI-Panel-CollapseButton-Down.blp")
+      minimizebutton:SetNormalTexture("Interface\\AddOns\\WeakAuras\\!Compatibility\\Textures\\UI-Panel-CollapseButton-Up.blp");
+      minimizebutton:SetPushedTexture("Interface\\AddOns\\WeakAuras\\!Compatibility\\Textures\\UI-Panel-CollapseButton-Down.blp");
 
       frame.buttonsScroll:DoLayout()
     else
       frame.minimized = true
       frame:SetHeight(40)
-      minimizebutton:SetNormalTexture("Interface\\BUTTONS\\UI-Panel-ExpandButton-Up.blp")
-      minimizebutton:SetPushedTexture("Interface\\BUTTONS\\UI-Panel-ExpandButton-Down.blp")
+      minimizebutton:SetNormalTexture("Interface\\AddOns\\WeakAuras\\!Compatibility\\Textures\\UI-Panel-ExpandButton-Up.blp");
+      minimizebutton:SetPushedTexture("Interface\\AddOns\\WeakAuras\\!Compatibility\\Textures\\UI-Panel-ExpandButton-Down.blp");
     end
     frame:UpdateFrameVisible()
   end)
