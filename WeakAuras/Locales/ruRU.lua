@@ -1179,6 +1179,6 @@ L["Zone ID(s)"] = "ID игровой зоны"
 L["Zone Name"] = "Название игровой зоны"
 L["Zoom"] = "Масштаб"
 L["Zul'Gurub"] = "Зул'Гуруб"
-L["GCD Reference Spell"] = "GCD Ссылка заклинания""
-L["Reference Spell"] = "Ссылка заклинания""
+L["GCD Reference Spell"] = "GCD Ссылка заклинания"
+L["Reference Spell"] = "Ссылка заклинания"
 
