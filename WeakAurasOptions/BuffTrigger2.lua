@@ -538,8 +538,9 @@ local function GetBuffTriggerOptions(data, triggernum)
         end
         WeakAuras.Add(data)
       end
-    },]]
+    },
     ownOnly = {
+      disabled = true,
       type = "toggle",
       width = WeakAuras.doubleWidth,
       name = function()
@@ -572,7 +573,7 @@ local function GetBuffTriggerOptions(data, triggernum)
       end,
       order = 64.3,
       hidden = function() return not trigger.type == "aura2" end
-    },
+    },]]
 
     fetchTooltip = {
       type = "toggle",

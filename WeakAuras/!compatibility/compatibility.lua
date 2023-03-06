@@ -193,7 +193,7 @@ function UnitAura(unit, indexOrName, rank, filter)
 			if ((name == indexOrName or x == indexOrName) and (rank == nil or rank:find("HARMFUL") or rank:find("HELPFUL") or rank == r)) then
 				local spellLink = GetSpellLink(name, r or "")
 				if spellLink then
-					return name, r, icon, count, dispelType, duration, GetTime() + (expirationTime or 0), nil, nil, tonumber(spellLink:match("spell:(%d+)"))
+					return name, r, icon, count, dispelType, duration, GetTime() + (expirationTime or 0), nil, nil, nil, tonumber(spellLink:match("spell:(%d+)"))
 				else
 					return name, r, icon, count, dispelType, duration, GetTime() + (expirationTime or 0)
 				end
