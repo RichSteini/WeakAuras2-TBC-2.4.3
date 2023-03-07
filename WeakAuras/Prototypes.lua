@@ -2321,11 +2321,12 @@ Private.event_prototypes = {
         store = true,
         conditionType = "number"
       },
+      --[[
       {
         enable = function(trigger)
           return trigger.subeventSuffix and (trigger.subeventSuffix == "_ENERGIZE")
         end
-      }, -- unknown argument for _ENERGIZE ignored
+      }, -- unknown argument for _ENERGIZE ignored]]
       {
         name = "powerType",
         display = L["Power Type"],
