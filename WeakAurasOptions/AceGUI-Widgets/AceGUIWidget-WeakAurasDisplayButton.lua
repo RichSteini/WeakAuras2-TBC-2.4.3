@@ -377,23 +377,23 @@ local function GetDropTarget()
 
   for id, button in pairs(buttonList) do
     if not button.dragging and button:IsEnabled() and button:IsShown() then
-      local halfHeight = button.frame:GetHeight() / 2
       local height = button.frame:GetHeight()
+      local mouseX, mouseY = GetCursorPosition()
+      local frameTop, frameBottom = button.frame:GetTop(), button.frame:GetBottom()
       if button.data.controlledChildren then
-        if button.data.parent == nil and button.frame:IsMouseOver(1, -1) then
+        if button.data.parent == nil and frameTop - 2*height > mouseY and frameBottom - 2*height < mouseY then
           -- Top level group, always group into
           return id, button, "GROUP"
         end
 
         -- For sub groups, middle third is for grouping
-        if button.frame:IsMouseOver(-height / 3, height / 3) then
+        if frameTop - height > mouseY and frameBottom - height < mouseY then
           return id, button, "GROUP"
         end
       end
-
-      if button.frame:IsMouseOver(1, height / 2) then
+      if frameTop - height + 1 > mouseY and frameBottom - height + height / 2 < mouseY then
         return id, button, "BEFORE"
-      elseif button.frame:IsMouseOver(-height / 2, -1) then
+      elseif frameTop - 2 * height - height / 2 > mouseY and frameBottom - 2 * height - 1 < mouseY then
         return id, button, "AFTER"
       end
     end
