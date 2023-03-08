@@ -96,7 +96,6 @@ end
 -- There is no function that yields the spellId for a spellname.
 -- The way it is implemented now is that always the highest spellId for a spellname is returned.
 -- Also note that UnitBuff does not return isStealable, unlucky
---[[
 local spellIdCache = {}
 local spellIdCacheId = 0
 local spellIdCacheMisses = 0
@@ -113,7 +112,6 @@ while spellIdCacheMisses < 53000 do
 		spellIdCacheMisses = spellIdCacheMisses + 1
 	end
 end
-]]
 
 -- UnitAura now parses the spellId from the spellLink, spellIdCache not used atm
 function UnitAura(unit, indexOrName, rank, filter)
@@ -173,7 +171,7 @@ function UnitAura(unit, indexOrName, rank, filter)
 				if spellLink then
 					return name, r, icon, count, debuffType, duration, GetTime() + (remaining or 0), (castable and "player"), nil, nil, tonumber(spellLink:match("spell:(%d+)"))
 				else
-					return name, r, icon, count, debuffType, duration, GetTime() + (remaining or 0), (castable and "player")
+					return name, r, icon, count, debuffType, duration, GetTime() + (remaining or 0), (castable and "player"), nil, nil, spellIdCache[name]
 				end
 			end
 			x = x + 1;
@@ -195,7 +193,7 @@ function UnitAura(unit, indexOrName, rank, filter)
 				if spellLink then
 					return name, r, icon, count, dispelType, duration, GetTime() + (expirationTime or 0), nil, nil, nil, tonumber(spellLink:match("spell:(%d+)"))
 				else
-					return name, r, icon, count, dispelType, duration, GetTime() + (expirationTime or 0)
+					return name, r, icon, count, dispelType, duration, GetTime() + (expirationTime or 0), nil, nil, nil, spellIdCache[name]
 				end
 			end
 			x = x + 1;
