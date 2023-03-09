@@ -1590,6 +1590,19 @@ do
           end
         end
         WeakAuras.ScanEvents(event);
+      elseif (event == "RANGE_DAMAGE" or messaage == "RANGE_MISSED") then
+        local currentTime = GetTime()
+        local speed = UnitRangedDamage("player")
+        if (lastSwingRange) then
+          timer:CancelTimer(rangeTimer, true);
+          event = "SWING_TIMER_CHANGE";
+        else
+            event = "SWING_TIMER_START";
+        end
+        lastSwingRange = currentTime;
+        swingDurationRange = speed;
+        rangeTimer = timer:ScheduleTimer(swingEnd, speed, "range");
+        WeakAuras.ScanEvents(event);
       end
     elseif (destGUID == selfGUID and (select(1, ...) == "PARRY" or select(4, ...) == "PARRY")) then
       if (lastSwingMain) then
@@ -1686,12 +1699,12 @@ do
     if not(swingTimerFrame) then
       swingTimerFrame = CreateFrame("frame");
       swingTimerFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
-      swingTimerFrame:RegisterEvent("PLAYER_ENTER_COMBAT");
-      swingTimerFrame:RegisterEvent("UNIT_ATTACK_SPEED");
-      swingTimerFrame:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED");
-      swingTimerFrame:RegisterEvent("UNIT_SPELLCAST_START")
-      swingTimerFrame:RegisterEvent("UNIT_SPELLCAST_INTERRUPTED")
-      swingTimerFrame:RegisterEvent("UNIT_SPELLCAST_FAILED")
+      --swingTimerFrame:RegisterEvent("PLAYER_ENTER_COMBAT");
+      --swingTimerFrame:RegisterEvent("UNIT_ATTACK_SPEED");
+      --swingTimerFrame:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED");
+      --swingTimerFrame:RegisterEvent("UNIT_SPELLCAST_START")
+      --swingTimerFrame:RegisterEvent("UNIT_SPELLCAST_INTERRUPTED")
+      --swingTimerFrame:RegisterEvent("UNIT_SPELLCAST_FAILED")
       swingTimerFrame:SetScript("OnEvent",
         function(_, event, ...)
           if event == "COMBAT_LOG_EVENT_UNFILTERED" then
