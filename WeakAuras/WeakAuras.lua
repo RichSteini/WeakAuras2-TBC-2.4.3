@@ -1180,9 +1180,10 @@ end
 local function GetInstanceTypeAndSize()
   local size, difficulty
   local inInstance, Type = IsInInstance()
-  local _, instanceType, difficultyIndex, _, maxPlayers, playerDifficulty, isDynamicInstance = GetInstanceInfo()
+  local _, instanceType, difficultyIndex, _, maxPlayers, playerDifficulty, _ = GetInstanceInfo()
   if (inInstance) then
-    local ZoneMapID = GetCurrentMapAreaID()
+    --local ZoneMapID = GetCurrentMapAreaID()
+    local ZoneMapID = 0 -- there is no GetCurrentMapAreaID() function in 2.4.3, lookup table?
     size = Type
     if Type == "raid" then
       if maxPlayers == 10 then
@@ -1195,20 +1196,12 @@ local function GetInstanceTypeAndSize()
         size = "fortyman"
       end
     end
-    if isDynamicInstance then
-      if playerDifficulty == 0 then
-        difficulty = "normal"
-      elseif playerDifficulty == 1 then
-        difficulty = "heroic"
-      end
+    if difficultyIndex == 1 then
+      playerDifficulty = "normal"
     else
-      if difficultyIndex == 1 or difficultyIndex == 2 then
-        difficulty = "normal"
-      elseif difficultyIndex == 3 or difficultyIndex == 4 then
-        difficulty = "heroic"
-      end
+      playerDifficulty = "heroic"
     end
-    return size, difficulty, instanceType, ZoneMapID
+    return size, playerDifficulty, instanceType, ZoneMapID
   end
   return "none", "none", nil, nil
 end

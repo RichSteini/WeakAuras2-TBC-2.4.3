@@ -1908,9 +1908,9 @@ Private.group_types = {
 }
 
 Private.difficulty_types = {
-  none = L["None"],
-  normal = PLAYER_DIFFICULTY1,
-  heroic = PLAYER_DIFFICULTY2
+  --none = L["None"],
+  normal = L["Normal"],
+  heroic = L["Heroic"]
 }
 
 Private.classification_types = {
