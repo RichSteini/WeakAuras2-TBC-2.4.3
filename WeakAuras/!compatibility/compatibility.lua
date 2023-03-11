@@ -253,6 +253,7 @@ function IsUsableSpell(spell, booktype)
 	else
 		spell = SpellID_to_SpellName(spell)
 		if spell then
+			spell = (string.gsub(spell, "%)$",")()"))
 			return hooks.IsUsableSpell(spell) -- вызываем оригинал
 		else
 			return nil
