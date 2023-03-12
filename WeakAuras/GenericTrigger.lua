@@ -1551,8 +1551,11 @@ do
   local function swingTimerCLEUCheck(ts, event, sourceGUID, _, _, destGUID, _, _, ...)
     Private.StartProfileSystem("generictrigger swing");
     if(sourceGUID == selfGUID) then
-      if(event == "SWING_DAMAGE" or event == "SWING_MISSED") then
-        local isOffHand = select(event == "SWING_DAMAGE" and 10 or 2, ...);
+      local spellName = select(2, ...)
+      if(event == "SWING_DAMAGE" or event == "SWING_MISSED"
+        or ((event == "SPELL_DAMAGE" or event == "SPELL_MISSED")
+        and (spellName == "Cleave" or spellName == "Heroic Strike" or spellName == "Maul" or spellName == "Raptor Strike"))) then
+        --local isOffHand = select(event == "SWING_DAMAGE" and 10 or 2, ...);
 
         local event;
         local currentTime = GetTime();
