@@ -1,4 +1,4 @@
-﻿## Interface: 50400
+﻿## Interface: 20400
 ## Title: WeakAuras Tutorials
 ## Author: Mirrored
 ## Version: 2.0.5
