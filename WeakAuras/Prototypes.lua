@@ -2239,11 +2239,12 @@ Private.event_prototypes = {
         store = true,
         conditionType = "number"
       },
+      --[[
       {
         enable = function(trigger)
           return trigger.subeventSuffix and trigger.subeventPrefix and (trigger.subeventSuffix == "_DAMAGE" or trigger.subeventPrefix == "DAMAGE_SHIELD" or trigger.subeventPrefix == "DAMAGE_SPLIT")
         end
-      }, -- damage school ignored with _ argument
+      }, -- damage school ignored with _ argument]]
       {
         name = "resisted",
         display = L["Resisted"],
