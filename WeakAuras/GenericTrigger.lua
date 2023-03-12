@@ -1548,20 +1548,26 @@ do
     WeakAuras.ScanEvents("SWING_TIMER_END");
   end
 
+  local swingTimerHackSpells = {
+    [845] = true, [7369] = true, [11608] = true, [11609] = true, [20569] = true, [25231] = true, -- Cleave
+    [78] = true, [284] = true, [285] = true, [1608] = true, [11564] = true, [11565] = true, [11566] = true, [11567] = true, [25286] = true, [29707] = true, [30324] = true, -- Heroic Strike
+    [6807] = true, [6808] = true, [6809] = true, [8972] = true, [9745] = true, [9880] = true, [9881] = true, [26996] = true, -- Maul
+    [2973] = true, [14260] = true, [14261] = true, [14262] = true, [14263] = true, [14264] = true, [14265] = true, [14266] = true, [27014] = true, -- Raptor Strike
+  }
+
   local function swingTimerCLEUCheck(ts, event, sourceGUID, _, _, destGUID, _, _, ...)
     Private.StartProfileSystem("generictrigger swing");
     if(sourceGUID == selfGUID) then
-      local spellName = select(2, ...)
-      if(event == "SWING_DAMAGE" or event == "SWING_MISSED"
-        or ((event == "SPELL_DAMAGE" or event == "SPELL_MISSED")
-        and (spellName == "Cleave" or spellName == "Heroic Strike" or spellName == "Maul" or spellName == "Raptor Strike"))) then
+      print(...)
+      local queueSpellCheck = (event == "SPELL_MISSED" or event == "SPELL_CAST_SUCCESS") and swingTimerHackSpells[...]
+      if(event == "SWING_DAMAGE" or event == "SWING_MISSED" or queueSpellCheck) then
         --local isOffHand = select(event == "SWING_DAMAGE" and 10 or 2, ...);
 
         local event;
         local currentTime = GetTime();
         mainSpeed, offSpeed = UnitAttackSpeed("player");
         offSpeed = offSpeed or 0;
-        if not(lastSwingMain) then
+        if not(lastSwingMain) or queueSpellCheck then
           lastSwingMain = currentTime;
           swingDurationMain = mainSpeed;
           mainSwingOffset = 0;
@@ -1703,7 +1709,7 @@ do
       swingTimerFrame = CreateFrame("frame");
       swingTimerFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
       --swingTimerFrame:RegisterEvent("PLAYER_ENTER_COMBAT");
-      --swingTimerFrame:RegisterEvent("UNIT_ATTACK_SPEED");
+      swingTimerFrame:RegisterEvent("UNIT_ATTACK_SPEED");
       --swingTimerFrame:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED");
       --swingTimerFrame:RegisterEvent("UNIT_SPELLCAST_START")
       --swingTimerFrame:RegisterEvent("UNIT_SPELLCAST_INTERRUPTED")
