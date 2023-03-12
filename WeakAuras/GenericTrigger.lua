@@ -1558,7 +1558,6 @@ do
   local function swingTimerCLEUCheck(ts, event, sourceGUID, _, _, destGUID, _, _, ...)
     Private.StartProfileSystem("generictrigger swing");
     if(sourceGUID == selfGUID) then
-      print(...)
       local queueSpellCheck = (event == "SPELL_MISSED" or event == "SPELL_CAST_SUCCESS") and swingTimerHackSpells[...]
       if(event == "SWING_DAMAGE" or event == "SWING_MISSED" or queueSpellCheck) then
         --local isOffHand = select(event == "SWING_DAMAGE" and 10 or 2, ...);
