@@ -1598,19 +1598,6 @@ do
           end
         end
         WeakAuras.ScanEvents(event);
-      elseif (event == "RANGE_DAMAGE" or messaage == "RANGE_MISSED") then
-        local currentTime = GetTime()
-        local speed = UnitRangedDamage("player")
-        if (lastSwingRange) then
-          timer:CancelTimer(rangeTimer, true);
-          event = "SWING_TIMER_CHANGE";
-        else
-            event = "SWING_TIMER_START";
-        end
-        lastSwingRange = currentTime;
-        swingDurationRange = speed;
-        rangeTimer = timer:ScheduleTimer(swingEnd, speed, "range");
-        WeakAuras.ScanEvents(event);
       end
     elseif (destGUID == selfGUID and (select(1, ...) == "PARRY" or select(4, ...) == "PARRY")) then
       if (lastSwingMain) then
@@ -1660,39 +1647,19 @@ do
       mainSpeed, offSpeed = mainSpeedNew, offSpeedNew
     elseif casting and (event == "UNIT_SPELLCAST_INTERRUPTED" or event == "UNIT_SPELLCAST_FAILED") then
       casting = false
-    elseif event == "UNIT_SPELLCAST_SUCCEEDED" then
-      if Private.reset_swing_spells[spell] or casting then
-        if casting then
-          casting = false
-        end
-        local event;
-        mainSpeed, offSpeed = UnitAttackSpeed("player");
-        lastSwingMain = GetTime();
-        swingDurationMain = mainSpeed;
-        mainSwingOffset = 0;
-        if (lastSwingMain) then
-          timer:CancelTimer(mainTimer);
-          event = "SWING_TIMER_CHANGE";
-        else
+    elseif event == "UNIT_SPELLCAST_SUCCEEDED" and spell == "Auto Shot" then
+      local currentTime = GetTime()
+      local speed = UnitRangedDamage("player")
+      if (lastSwingRange) then
+        timer:CancelTimer(rangeTimer, true);
+        event = "SWING_TIMER_CHANGE";
+      else
           event = "SWING_TIMER_START";
-        end
-        mainTimer = timer:ScheduleTimer(swingEnd, mainSpeed, "main");
-        WeakAuras.ScanEvents(event);
-      elseif Private.reset_ranged_swing_spells[spell] then
-        local event;
-        local currentTime = GetTime();
-        local speed = UnitRangedDamage("player");
-        if(lastSwingRange) then
-          timer:CancelTimer(rangeTimer, true)
-          event = "SWING_TIMER_CHANGE";
-        else
-          event = "SWING_TIMER_START";
-        end
-        lastSwingRange = currentTime;
-        swingDurationRange = speed;
-        rangeTimer = timer:ScheduleTimer(swingEnd, speed, "ranged");
-        WeakAuras.ScanEvents(event);
       end
+      lastSwingRange = currentTime;
+      swingDurationRange = speed;
+      rangeTimer = timer:ScheduleTimer(swingEnd, speed, "range");
+      WeakAuras.ScanEvents(event);
     elseif event == "UNIT_SPELLCAST_START" then
       -- pause swing timer
       casting = true
@@ -1707,9 +1674,9 @@ do
     if not(swingTimerFrame) then
       swingTimerFrame = CreateFrame("frame");
       swingTimerFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
-      --swingTimerFrame:RegisterEvent("PLAYER_ENTER_COMBAT");
+      swingTimerFrame:RegisterEvent("PLAYER_ENTER_COMBAT");
       swingTimerFrame:RegisterEvent("UNIT_ATTACK_SPEED");
-      --swingTimerFrame:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED");
+      swingTimerFrame:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED");
       --swingTimerFrame:RegisterEvent("UNIT_SPELLCAST_START")
       --swingTimerFrame:RegisterEvent("UNIT_SPELLCAST_INTERRUPTED")
       --swingTimerFrame:RegisterEvent("UNIT_SPELLCAST_FAILED")
