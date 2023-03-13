@@ -1647,18 +1647,18 @@ do
       mainSpeed, offSpeed = mainSpeedNew, offSpeedNew
     elseif casting and (event == "UNIT_SPELLCAST_INTERRUPTED" or event == "UNIT_SPELLCAST_FAILED") then
       casting = false
-    elseif event == "UNIT_SPELLCAST_SUCCEEDED" and spell == "Auto Shot" then
+    elseif event == "UNIT_SPELLCAST_SUCCEEDED" and spell == GetSpellInfo(75) then
       local currentTime = GetTime()
       local speed = UnitRangedDamage("player")
       if (lastSwingRange) then
         timer:CancelTimer(rangeTimer, true);
         event = "SWING_TIMER_CHANGE";
       else
-          event = "SWING_TIMER_START";
+        event = "SWING_TIMER_START";
       end
       lastSwingRange = currentTime;
       swingDurationRange = speed;
-      rangeTimer = timer:ScheduleTimer(swingEnd, speed, "range");
+      rangeTimer = timer:ScheduleTimer(swingEnd, speed, "ranged");
       WeakAuras.ScanEvents(event);
     elseif event == "UNIT_SPELLCAST_START" then
       -- pause swing timer
