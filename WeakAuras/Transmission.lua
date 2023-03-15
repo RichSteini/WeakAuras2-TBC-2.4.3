@@ -210,7 +210,7 @@ local configForLS = {
 local tooltipLoading;
 local receivedData;
 
-hooksecurefunc("SetItemRef", function(link, text)
+hooksecurefunc("SetItemRef", function(link, text, button)
   if(link == "BNplayer::weakauras") then
     local _, _, characterName, displayName = text:find("|HBNplayer::weakauras|h|cFF8800FF%[([^%s]+) |r|cFF8800FF%- ([^%]]+)%]|h");
     if(characterName and displayName) then
@@ -230,6 +230,7 @@ hooksecurefunc("SetItemRef", function(link, text)
         });
         tooltipLoading = true;
         receivedData = false;
+        ItemRefTooltip.requested = true
         RequestDisplay(characterName, displayName);
         WeakAuras.timer:ScheduleTimer(function()
           if (tooltipLoading and not receivedData and ItemRefTooltip:IsVisible()) then
@@ -249,6 +250,14 @@ hooksecurefunc("SetItemRef", function(link, text)
     end
   end
 end);
+
+local OriginalSetHyperlink = ItemRefTooltip.SetHyperlink
+function ItemRefTooltip:SetHyperlink(link, ...)
+  if(link and link:find("BNplayer::weakauras")) then
+      return;
+  end
+  return OriginalSetHyperlink(self, link, ...);
+end
 
 local compressedTablesCache = {}
 
@@ -622,7 +631,8 @@ Comm:RegisterComm("WeakAuras", function(prefix, message, distribution, sender)
 
   local received = StringToTable(message);
   if(received and type(received) == "table" and received.m) then
-    if(received.m == "d") then
+    if(received.m == "d" and ItemRefTooltip.requested) then
+      ItemRefTooltip.requested = nil
       tooltipLoading = nil;
       local data, children, version = received.d, received.c, received.v
       WeakAuras.PreAdd(data)
