@@ -79,6 +79,13 @@ local timers = WeakAuras.timers;
 local LoadEvent, HandleEvent, HandleUnitEvent, TestForTriState, TestForToggle, TestForLongString, TestForMultiSelect
 local ConstructTest, ConstructFunction
 
+function WeakAuras.GetInventoryItemID(unit, slotId)
+	local link = GetInventoryItemLink(unit, slotId);
+	local _,_,itemID = string.find(link or "", "item:(%d+):%d+:%d+:%d+");
+    itemID = tonumber(itemID);
+    return itemID;
+end
+
 function WeakAuras.UnitExistsFixed(unit, smart)
   if smart and IsInRaid() then
     if unit:sub(1, 5) == "party" or unit == "player" then
@@ -2273,7 +2280,7 @@ do
         end
       end
 
-      local newItemId = GetInventoryItemID("player", id);
+      local newItemId = WeakAuras.GetInventoryItemID("player", id);
       if (itemId ~= newItemId) then
         if not WeakAuras.IsPaused() then
           WeakAuras.ScanEvents("ITEM_SLOT_COOLDOWN_ITEM_CHANGED")
@@ -2414,7 +2421,7 @@ do
     if not id or id == 0 then return end
 
     if not(itemSlots[id]) then
-      itemSlots[id] = GetInventoryItemID("player", id);
+      itemSlots[id] = WeakAuras.GetInventoryItemID("player", id);
       local startTime, duration, enable = GetInventoryItemCooldown("player", id);
       itemSlotsEnable[id] = enable;
       if(duration > 0 and duration > 1.5 and duration ~= WeakAuras.gcdDuration()) then
@@ -2515,7 +2522,7 @@ function WeakAuras.GetEquipmentSetInfo(itemSetName, partial)
   local bestMatchIcon = nil;
 
   for slot = 1, 19 do
-    equipmentItemIDs[slot] = GetInventoryItemID("player", slot) or 0
+    equipmentItemIDs[slot] = WeakAuras.GetInventoryItemID("player", slot) or 0
   end
 
   for id = 1, GetNumEquipmentSets() do
