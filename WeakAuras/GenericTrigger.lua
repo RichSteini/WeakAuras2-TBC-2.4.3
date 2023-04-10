@@ -3525,7 +3525,14 @@ function GenericTrigger.SetToolTip(trigger, state)
       end
       return true
     elseif (state.spellId) then
-      GameTooltip:SetSpellByID(state.spellId);
+      -- This only works for spells in the players spellbook
+      local spellBookId, bookType = GetSpellBookID(state.spellId, BOOKTYPE_SPELL), BOOKTYPE_SPELL
+      if not spellBookId then
+        spellBookId, bookType = GetSpellBookID(state.spellId, BOOKTYPE_PET), BOOKTYPE_PET
+      end
+      if spellBookId then
+        GameTooltip:SetSpell(spellBookId, bookType);
+      end
       return true
     elseif (state.link) then
       GameTooltip:SetHyperlink(state.link);
@@ -3548,7 +3555,14 @@ function GenericTrigger.SetToolTip(trigger, state)
   if (Private.category_event_prototype[trigger.type]) then
     if (trigger.event and Private.event_prototypes[trigger.event]) then
       if(Private.event_prototypes[trigger.event].hasSpellID) then
-        GameTooltip:SetSpellByID(trigger.spellName);
+        -- This only works for spells in the players spellbook
+        local spellBookId, bookType = GetSpellBookID(trigger.spellName, BOOKTYPE_SPELL), BOOKTYPE_SPELL
+        if not spellBookId then
+          spellBookId, bookType = GetSpellBookID(trigger.spellName, BOOKTYPE_PET), BOOKTYPE_PET
+        end
+        if spellBookId then
+          GameTooltip:SetSpell(spellBookId, bookType);
+        end
         return true
       elseif(Private.event_prototypes[trigger.event].hasItemID) then
         GameTooltip:SetHyperlink("item:"..trigger.itemName..":0:0:0:0:0:0:0")
