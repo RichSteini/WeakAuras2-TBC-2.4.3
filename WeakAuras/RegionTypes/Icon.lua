@@ -74,11 +74,12 @@ local properties = {
     setter = "SetInverse",
     type = "bool"
   },
-  cooldownEdge = {
+  --[[
+    cooldownEdge = {
     display = { L["Cooldown"], L["Edge"]},
     setter = "SetCooldownEdge",
     type = "bool",
-  },
+  },]]
   zoom = {
     display = L["Zoom"],
     setter = "SetZoom",
