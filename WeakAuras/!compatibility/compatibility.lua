@@ -174,7 +174,7 @@ function UnitAura(unit, indexOrName, rank, filter)
 				if spellLink then
 					return name, r, icon, count, debuffType, duration, GetTime() + (remaining or 0), caster,  isStealable, nil, tonumber(spellLink:match("spell:(%d+)"))
 				else
-					return name, r, icon, count, debuffType, duration, GetTime() + (remaining or 0), (castable and "player"), isStealable, nil, spellIdCache[name]
+					return name, r, icon, count, debuffType, duration, GetTime() + (remaining or 0), caster, isStealable, nil, spellIdCache[name]
 				end
 			end
 			x = x + 1;
