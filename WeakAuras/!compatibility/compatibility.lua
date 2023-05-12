@@ -141,6 +141,7 @@ function UnitAura(unit, indexOrName, rank, filter)
 	end
 	--]]
 	
+	local debuffType
 	if ((filter and filter:find("HARMFUL")) or ((rank and rank:find("HARMFUL")) and filter == nil)) then
 		debuffType = "HARMFUL";
 	elseif ((filter and filter:find("HELPFUL")) or ((rank and rank:find("HARMFUL")) and filter == nil)) then
@@ -168,10 +169,12 @@ function UnitAura(unit, indexOrName, rank, filter)
 				duration = duration or 15
 				remaining = remaining or GetPlayerBuffTimeLeft(x)
 				local spellLink = GetSpellLink(name, r or "")
+				local caster = (castable and remaining and remaining > 0) and "player" or nil
+				local isStealable = debuffType == "Magic" and 1 or nil
 				if spellLink then
-					return name, r, icon, count, debuffType, duration, GetTime() + (remaining or 0), (castable and "player"), nil, nil, tonumber(spellLink:match("spell:(%d+)"))
+					return name, r, icon, count, debuffType, duration, GetTime() + (remaining or 0), caster,  isStealable, nil, tonumber(spellLink:match("spell:(%d+)"))
 				else
-					return name, r, icon, count, debuffType, duration, GetTime() + (remaining or 0), (castable and "player"), nil, nil, spellIdCache[name]
+					return name, r, icon, count, debuffType, duration, GetTime() + (remaining or 0), (castable and "player"), isStealable, nil, spellIdCache[name]
 				end
 			end
 			x = x + 1;
@@ -190,10 +193,12 @@ function UnitAura(unit, indexOrName, rank, filter)
 		while (name ~= nil) do
 			if ((name == indexOrName or x == indexOrName) and (rank == nil or rank:find("HARMFUL") or rank:find("HELPFUL") or rank == r)) then
 				local spellLink = GetSpellLink(name, r or "")
+				local caster = (expirationTime and expirationTime > 0) and "player" or nil
+				local isStealable = dispelType == "Magic" and 1 or nil
 				if spellLink then
-					return name, r, icon, count, dispelType, duration, GetTime() + (expirationTime or 0), nil, nil, nil, tonumber(spellLink:match("spell:(%d+)"))
+					return name, r, icon, count, dispelType, duration, GetTime() + (expirationTime or 0), caster, isStealable, nil, tonumber(spellLink:match("spell:(%d+)"))
 				else
-					return name, r, icon, count, dispelType, duration, GetTime() + (expirationTime or 0), nil, nil, nil, spellIdCache[name]
+					return name, r, icon, count, dispelType, duration, GetTime() + (expirationTime or 0), caster, isStealable, nil, spellIdCache[name]
 				end
 			end
 			x = x + 1;

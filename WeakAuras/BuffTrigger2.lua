@@ -2073,13 +2073,13 @@ local function createScanFunc(trigger)
   end
 
   if use_stealable then
-    --[[ret = ret ..  
+    ret = ret .. [[
       if not matchData.isStealable then
         return false
       end
     ]]
   elseif use_stealable == false then
-    --[[ret = ret .. 
+    ret = ret .. [[
       if matchData.isStealable then
         return false
       end
@@ -2096,13 +2096,13 @@ local function createScanFunc(trigger)
   end
 
   if trigger.ownOnly then
-    --[[ret = ret .. 
+    ret = ret .. [[
       if matchData.unitCaster ~= 'player' and matchData.unitCaster ~= 'pet' then
         return false
       end
     ]]
   elseif trigger.ownOnly == false then
-    --[[ret = ret .. 
+    ret = ret .. [[
       if matchData.unitCaster == 'player' or matchData.unitCaster == 'pet' then
         return false
       end

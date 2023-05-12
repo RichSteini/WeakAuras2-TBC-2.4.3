@@ -510,7 +510,6 @@ local function GetBuffTriggerOptions(data, triggernum)
       order = 61.7,
       hidden = function() return not (trigger.type == "aura2" and trigger.unit ~= "multi" and CanHaveMatchCheck(trigger) and not trigger.useTotal) end
     },
-    --[[
     use_stealable = {
       type = "toggle",
       name = function(input)
@@ -540,7 +539,6 @@ local function GetBuffTriggerOptions(data, triggernum)
       end
     },
     ownOnly = {
-      disabled = true,
       type = "toggle",
       width = WeakAuras.doubleWidth,
       name = function()
@@ -573,8 +571,7 @@ local function GetBuffTriggerOptions(data, triggernum)
       end,
       order = 64.3,
       hidden = function() return not trigger.type == "aura2" end
-    },]]
-
+    },
     fetchTooltip = {
       type = "toggle",
       name = L["Fetch Tooltip Information"],
