@@ -1151,8 +1151,8 @@ Private.orientation_with_circle_types = {
   HORIZONTAL = L["Right to Left"],
   VERTICAL = L["Bottom to Top"],
   VERTICAL_INVERSE = L["Top to Bottom"],
-  CLOCKWISE = L["Clockwise"],
-  ANTICLOCKWISE = L["Anticlockwise"]
+  --CLOCKWISE = L["Clockwise"],
+  --ANTICLOCKWISE = L["Anticlockwise"]
 }
 
 Private.talent_types = {}

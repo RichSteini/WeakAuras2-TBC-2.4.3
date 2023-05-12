@@ -284,20 +284,20 @@ local function animRotate(object, degrees, anchor, regionRotate, aspect)
 
   -- Something to rotate
   -- Create AnimationGroup and rotation animation
-  if (not object.animationGroup) then
-    object.animationGroup = object:CreateAnimationGroup();
-    object.animationGroup:SetLooping("REPEAT")
-  end
+  --if (not object.animationGroup) then
+    --object.animationGroup = object:CreateAnimationGroup();
+    --object.animationGroup:SetLooping("REPEAT")
+  --end
 
-  object.animationGroup.rotate = object.animationGroup.rotate or object.animationGroup:CreateAnimation("rotation");
+  --object.animationGroup.rotate = object.animationGroup.rotate or object.animationGroup:CreateAnimation("rotation");
 
-  local rotate = object.animationGroup.rotate;
-  rotate:SetOrigin(anchor, 0, 0);
-  rotate:SetDegrees(degrees);
-  rotate:SetDuration( 0 );
-  rotate:SetEndDelay(15); -- 2147483647
-  Transform(object, -0.5, -0.5, -degrees + regionRotate, aspect)
-  object.animationGroup:Play();
+  --local rotate = object.animationGroup.rotate;
+  --rotate:SetOrigin(anchor, 0, 0);
+  --rotate:SetDegrees(degrees);
+  --rotate:SetDuration( 0 );
+  --rotate:SetEndDelay(15); -- 2147483647
+  --Transform(object, -0.5, -0.5, -degrees + regionRotate, aspect)
+  --object.animationGroup:Play();
 end
 
 function spinnerFunctions.SetProgress(self, region, startAngle, endAngle, progress, clockwise)
