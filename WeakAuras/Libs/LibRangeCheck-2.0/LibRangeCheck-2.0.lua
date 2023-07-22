@@ -200,6 +200,7 @@ HarmSpells["DEATHKNIGHT"] = {
 
 local FriendItems  = {
     [5] = {
+        8149, -- Voodoo Charm (Vanilla)
         37727, -- Ruby Acorn
     },
     [8] = {
@@ -262,6 +263,7 @@ local FriendItems  = {
 
 local HarmItems = {
     [5] = {
+        8149, -- Voodoo Charm (Vanilla)
         37727, -- Ruby Acorn
     },
     [8] = {
