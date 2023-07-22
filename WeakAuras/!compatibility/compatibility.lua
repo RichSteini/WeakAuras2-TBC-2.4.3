@@ -170,7 +170,7 @@ function UnitAura(unit, indexOrName, rank, filter)
 				remaining = remaining or GetPlayerBuffTimeLeft(x)
 				local spellLink = GetSpellLink(name, r or "")
 				local caster = (castable and remaining and remaining > 0) and "player" or nil
-				local isStealable = debuffType == "Magic" and 1 or nil
+				--local isStealable = debuffType == "Magic" and 1 or nil
 				if spellLink then
 					return name, r, icon, count, debuffType, duration, GetTime() + (remaining or 0), caster,  isStealable, nil, tonumber(spellLink:match("spell:(%d+)"))
 				else
@@ -194,7 +194,7 @@ function UnitAura(unit, indexOrName, rank, filter)
 			if ((name == indexOrName or x == indexOrName) and (rank == nil or rank:find("HARMFUL") or rank:find("HELPFUL") or rank == r)) then
 				local spellLink = GetSpellLink(name, r or "")
 				local caster = (expirationTime and expirationTime > 0) and "player" or nil
-				local isStealable = dispelType == "Magic" and 1 or nil
+				--local isStealable = dispelType == "Magic" and true or nil
 				if spellLink then
 					return name, r, icon, count, dispelType, duration, GetTime() + (expirationTime or 0), caster, isStealable, nil, tonumber(spellLink:match("spell:(%d+)"))
 				else

@@ -510,6 +510,7 @@ local function GetBuffTriggerOptions(data, triggernum)
       order = 61.7,
       hidden = function() return not (trigger.type == "aura2" and trigger.unit ~= "multi" and CanHaveMatchCheck(trigger) and not trigger.useTotal) end
     },
+    --[[
     use_stealable = {
       type = "toggle",
       name = function(input)
@@ -537,7 +538,7 @@ local function GetBuffTriggerOptions(data, triggernum)
         end
         WeakAuras.Add(data)
       end
-    },
+    },]]
     ownOnly = {
       type = "toggle",
       width = WeakAuras.doubleWidth,
